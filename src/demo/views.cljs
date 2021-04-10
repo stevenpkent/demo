@@ -5,12 +5,11 @@
    [demo.subs :as subs]
    [demo.events :as events]))
 
-(defonce do-timer (js/setInterval #(rf/dispatch [::events/change-date (js/Date.)]) 1000))
-
 (defn clock
   [color]
-  (let [date @(rf/subscribe [::subs/date])]
-    [:div {:style {:color color}} (-> date .toTimeString (str/split " ") first)]))
+  [:div 
+   {:style {:color color}} 
+   (first (str/split (.toTimeString @(rf/subscribe [::subs/date])) #" "))])
 
 (defn main-panel []
   (let [name @(rf/subscribe [::subs/name])
@@ -22,3 +21,5 @@
        :type :text
        :value color}]
      [clock color]]))
+
+(defonce do-timer (js/setInterval #(rf/dispatch [::events/change-date (js/Date.)]) 1000))
