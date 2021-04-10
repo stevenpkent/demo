@@ -1,11 +1,20 @@
 (ns demo.events
   (:require
-   [re-frame.core :as re-frame]
+   [re-frame.core :as rf]
    [demo.db :as db]
-   [day8.re-frame.tracing :refer-macros [fn-traced]]
-   ))
+   [day8.re-frame.tracing :refer-macros [fn-traced]]))
 
-(re-frame/reg-event-db
+(rf/reg-event-db
  ::initialize-db
  (fn-traced [_ _]
    db/default-db))
+
+(rf/reg-event-db
+ ::change-date
+ (fn [db [_ new-date]]
+   (assoc db :date new-date)))
+
+(rf/reg-event-db
+ ::change-color
+ (fn [db [_ new-color]]
+   (assoc db :color new-color)))

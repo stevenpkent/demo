@@ -1,8 +1,18 @@
 (ns demo.subs
   (:require
-   [re-frame.core :as re-frame]))
+   [re-frame.core :as rf]))
 
-(re-frame/reg-sub
+(rf/reg-sub
  ::name
  (fn [db]
    (:name db)))
+
+(rf/reg-sub
+ ::color
+ (fn [db]
+   (:color db)))
+
+(rf/reg-sub
+ ::date
+ (fn [db]
+   (:date db)))
