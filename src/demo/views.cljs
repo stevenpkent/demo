@@ -6,20 +6,23 @@
    [demo.events :as events]))
 
 (defn clock
-  [color]
+  []
   [:div 
-   {:style {:color color}} 
-   (first (str/split (.toTimeString @(rf/subscribe [::subs/date])) #" "))])
+   {:style {:color @(rf/subscribe [::subs/color])}} 
+   (-> @(rf/subscribe [::subs/date]) .toTimeString (str/split #" ") first)])
+
+(defn color-input
+  []
+  [:input
+   {:on-change #(rf/dispatch [::events/change-color (.-value (.-target %))])
+    :type :text
+    :value @(rf/subscribe [::subs/color])}])
 
 (defn main-panel []
-  (let [name @(rf/subscribe [::subs/name])
-        color @(rf/subscribe [::subs/color])]
+  (let [name @(rf/subscribe [::subs/name])]
     [:div
-     [:h1 {:style {:color color}} "Hello from " name]
-     [:input
-      {:on-change #(rf/dispatch [::events/change-color (-> % .-target .-value)])  
-       :type :text
-       :value color}]
-     [clock color]]))
+     [:h1 "Hello from " name]
+     [color-input]
+     [clock]]))
 
 (defonce do-timer (js/setInterval #(rf/dispatch [::events/change-date (js/Date.)]) 1000))
